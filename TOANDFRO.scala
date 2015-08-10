@@ -10,8 +10,8 @@ object TOANDFRO {
       else {
         val encryptedMessage = StdIn.readLine
         val parts: List[String] = createParts(encryptedMessage, columnCount)
-        val reversed = reverseAlternate(parts)
-        val decryptedMessage = decryptList(reversed)
+        val reversed: List[String] = reverseAlternate(parts)
+        val decryptedMessage: String = decryptList(reversed)
         println(decryptedMessage)
       }
     }
@@ -44,7 +44,6 @@ object TOANDFRO {
   }
 
   def decryptList(l: List[String]): String = {
-    //  List(toioy, hpknn, eleai, rahsg, econh, semot, nlewx)
     var currentCount = 0
     val columnCount = l(0).length // These are padded to be equal always
     val message = new StringBuilder()
