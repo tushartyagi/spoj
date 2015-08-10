@@ -9,7 +9,8 @@ object Main {
       val s = StdIn.readLine
       if (allZeros(s)) eof = true
       else {
-        val parts = s.split("\\s")
+        // A half-assed way of coding in Scala
+        val parts: Array[String] = s.split("\\s")
         val a = parts(0).toInt
         val b = parts(1).toInt
         val c = parts(2).toInt
@@ -22,7 +23,6 @@ object Main {
         }
       }
     }
-
 
     def allZeros(s: String): Boolean = {
       s.split("\\s").forall(_ == "0")
