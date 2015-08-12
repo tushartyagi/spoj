@@ -1,29 +1,50 @@
 import scala.io.StdIn
 
-object Edist {
-  def main(args: Array[String]): Unit = {
-    var testCaseCount = 10
+object Main extends App {
+  override def main(args: Array[String]): Unit = {
+    var testCaseCount = StdIn.readLine.toInt
 
     for(i <- 0 until testCaseCount) {
-      val caseNumber = StdIn.readLine.toInt
       val from = StdIn.readLine
       val to = StdIn.readLine
 
-      // The operation that finds and removes the
-      // common chars in the given string
-      val diffs: Tuple2[String, String] = noOp(from, to)
-      // This operation finds the number of operations which will
-      // replace one letter with another letter
-      val replacable: Int = Math.min(diffs._1.length, diffs._2.length)
-      // This operation will add or remove extra letters
-      val addRemove: Int = Math.abs(diffs._1.length - diffs._2.length)
-      // The total number of operations are those which replace, add
-      // or remove
-      println(addRemove + replacable)
+      val edist = Levenshtein(from, to)
+      println(edist)
     }
   }
 
-  def noOp(from: String, to: String) = {
-    new Tuple2(from.diff(to), to.diff(from))
+  @inline def min(a: Int, b: Int, c: Int): Int = {
+    Math.min(a, Math.min(b, c))
+  }
+
+  def Levenshtein(from: String, to: String): Int = {
+    val fromLength = from.length
+    val toLength = to.length
+
+    if (fromLength == 0)
+      toLength
+    else if (toLength == 0)
+      fromLength
+    else {
+      val matrix = Array.ofDim[Int](toLength + 1, fromLength + 1)
+      // Initialize
+      for(i <- 1 to fromLength) matrix(0)(i) = i
+      for(i <- 1 to toLength) matrix(i)(0) = i
+
+      // Calculate matrix
+      for {
+        i <- 1 to fromLength
+        j <- 1 to toLength
+      } {
+        val cost = if (from(i-1) == to(j-1)) 0 else 1
+        val upper = matrix(j)(i-1) + 1
+        val previous = matrix(j-1)(i) + 1
+        val diagonal = matrix(j-1)(i-1) + cost
+        matrix(j)(i) = min(upper, previous, diagonal)
+      }
+
+      val edist = matrix(toLength)(fromLength)
+      edist
+    }
   }
 }
